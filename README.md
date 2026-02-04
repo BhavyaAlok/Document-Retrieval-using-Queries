@@ -1,74 +1,80 @@
-# ps5_aigrand_docmodel
+# DOCUMENT RETRIEVAL AND ANNOTATION PIPELINE
 
-ध्यान से सुनो , 
+## DESCRIPTION
 
-```
-{0:"Background", 
-1: "Text", 
-2: "Title", 
-3 : "List", 
-4: "Table", 
-5: "Figure""}
-ये सारे classes हैं जिनमे classify करना है 
-```
+This project provides a way to manage and verify document datasets.  
+It uses a notebook to bridge the gap between image storage and metadata generation.  
+It is built for large document collections where visual quality checks are needed before training models.  
+It automates file name extraction and pairs them with annotation structures.
 
-ये सारे languages में करना है 
-English  Hindi  Urdu  Arabic  Nepalese  Persian 
+## KEY FEATURES
 
-___________________________________
+### Visual Inspection
 
-मगर उनके training  data के हिसाब से ------
+The tool uses matplotlib to show 10 random document images.  
+This allows for a quick manual check of image quality and layout.
 
+### Metadata Structuring
 
-वो text  को बैकग्राउंड मानता है \
-title  को text \
-लिस्ट को टाइटल \
-(मतलब एक पिछले में classify करता है)
-___________________________________
+It creates a JSON object for every file.  
+Each object includes the filename, an annotation placeholder, and a corruption block for tracking quality issues.
 
-# अब सुनो क्या क्या करना बचा है :
- 
- 
-## [major] test में सिर्फ अंग्रेजी में text था|
+### Automated Export
 
+The script creates a results directory and fills it with individual JSON files.  
+It processes the whole directory automatically.
 
-उसके लिए हमे problem statement में दिए गए datasets एस्तेमाल कर सकते हैं | 
+## TECHNICAL REQUIREMENTS
 
-एन सबका अध्ययन करो और किसी तरह से हमारे test data जैसा बदलने की कोशिश करो  
+Python 3.x  
+matplotlib  
+os, json, random  
 
-(हिन्दी उर्दू फारसी ही नहीं english में भी training data और मिले तो अच्छा ही रहेगा )
+## USAGE
 
-```
-DocLayNet 
-PubLayNet 
-RvlCdip 
-ICDAR-MLT 2019 
-HI-OCR 
-FUNSD 
-SROIE 
-``` 
+Set your image directory path in the script.  
+Run the visualization cell to see random samples.  
+Run the export cell to save JSON files in the results folder.
 
+## OUTPUT SCHEMA
 
+Each JSON file includes:
 
-## [major] ईस्को देखो क्या क्या कर सकते हैं  
+file_name: name of the image  
+annotations: list of prediction data  
+corruption: includes type and severity  
 
-The rotated ones may require  de
-skewing first. The Ground truth bounding are for the de-skewed images. The 
-ground truth bboxes are in HBB format
+## NOTES
 
+The script uses Windows path formatting.  
+Adjust paths if you use Linux or macOS.
 
-## [minor] देखो हम कहाँ कहाँ असफल हो रहे हैं 
+---
 
-मैंने test data को random split किया था , कोशिश करो **class wise split** करने की| उससे result अच्छा होगा पक्का 
+## PYTHON CODE
 
+### Visual inspection cell
 
-## [minor] दिए गए data में ocr की images नहीं थी|
+```python
+import os
+import random
+import matplotlib.pyplot as plt
+from PIL import Image
 
-ocr का data भी निकालो ऊपर 1st वाले dataset से |
+IMAGE_DIR = r"C:\path\to\your\images"
 
-__________________________________
+files = [f for f in os.listdir(IMAGE_DIR) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+sample_files = random.sample(files, min(10, len(files)))
 
-> पहले code चलाने का प्रयास तो करो देखो 2-3 epoch पे कितना वक्त ले रहा है |  
+plt.figure(figsize=(15, 8))
 
-> pstatement के साथ दिए गए data की लिंक ग्रुप में से उठा लो | 
+for i, file in enumerate(sample_files):
+    img_path = os.path.join(IMAGE_DIR, file)
+    img = Image.open(img_path)
+    plt.subplot(2, 5, i + 1)
+    plt.imshow(img)
+    plt.title(file)
+    plt.axis("off")
 
+plt.tight_layout()
+plt.show()
