@@ -78,3 +78,6 @@ for i, file in enumerate(sample_files):
 
 plt.tight_layout()
 plt.show()
+```
+![Example Output Screenshot](https://github.com/BhavyaAlok/Document-Retrieval-using-Queries/blob/main/DataSampleFolder/Screenshot%202026-02-04%20200823.png?raw=true)
+
